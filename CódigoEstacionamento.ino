@@ -90,7 +90,7 @@ void loop() {
   }
 }
 
-void CorRGB(int vermelho, int verde, int azul)
+void CorRGB(int vermelho, int verde, int azul) // FUNÇÃO PARA O LED RGB
 {
   vermelho = 255 - vermelho;
   verde = 255 - verde;
