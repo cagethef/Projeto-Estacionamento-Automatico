@@ -3,6 +3,7 @@
 Servo gate; // objeto servo
 int sensorportao = 3; // sensor do portao
 int vaga1 = 4; // sensor vaga 1
+int vaga2 = 5; // sensor vaga 2
 int portao_R = 9; // LED rgb vermelho 
 int portao_G = 10; // LED rgb verde
 int portao_B = 11; // LED rgb azul
@@ -14,6 +15,7 @@ void setup() {
   gate.attach(6); // Conectando o servo no pino 6
   pinMode(sensorportao, INPUT);
   pinMode(vaga1, INPUT);
+  pinMode(vaga2, INPUT);
   pinMode(portao_R, OUTPUT);
   pinMode(portao_G, OUTPUT);
   pinMode(portao_B, OUTPUT);
@@ -42,7 +44,7 @@ void loop() {
   digitalWrite(portao_B, LOW); // Apaga LED B
   }
   
-  if(!(digitalRead(sensorportao)) && (digitalRead(vaga1))) // Quando o carro se aproximar do portão e se a vaga 1 e a vaga 2 estiverem vazias
+  if(!(digitalRead(sensorportao)) && (digitalRead(vaga1)) && (digitalRead(vaga2))) // Quando o carro se aproximar do portão e se a vaga 1 e a vaga 2 estiverem vazias
   {
   digitalWrite(vaga1_led, HIGH); // LIGAR LED DA VAGA 1
   digitalWrite(vaga2_led, HIGH); // LIGAR LED DA VAGA 2
@@ -51,7 +53,7 @@ void loop() {
   gate.write(200); // Abre a cancela
   }
   
-  if(!(digitalRead(sensorportao)) && !(digitalRead(vaga1))) // Quando o carro se aproximar do portão e se tiver carro na vaga 1 e a vaga 2 estiver vazia
+  if(!(digitalRead(sensorportao)) && !(digitalRead(vaga1)) && (digitalRead(vaga2))) // Quando o carro se aproximar do portão e se tiver carro na vaga 1 e a vaga 2 estiver vazia
   {
   digitalWrite(vaga1_led, LOW); // LED VAGA 1 APAGADO
   digitalWrite(vaga2_led, HIGH); // LED VAGA 2 LIGADO
@@ -60,8 +62,16 @@ void loop() {
   gate.write(200); // Abre a cancela
   }
   
+  if(!(digitalRead(sensorportao)) && (digitalRead(vaga1)) && !(digitalRead(vaga2))) // Quando o carro se aproximar do portão e se tiver carro na vaga 2 e a vaga 1 estiver vazia
+  {
+  digitalWrite(vaga1_led, HIGH); // LED VAGA 1 LIGADO
+  digitalWrite(vaga2_led, LOW); // LED VAGA 2 APAGADO
+  delay(1000); // Espera 1seg
+  CorRGB(255, 255, 0); // LED DO PORTAO FICA AMARELO
+  gate.write(200); // LED DO PORTAO FICA AMARELO
+  }
   
-  if(!(digitalRead(sensorportao)) && !(digitalRead(vaga1))) // Quando o carro se aproximar do portão e se nao tiver nenhuma vaga disponivel
+  if(!(digitalRead(sensorportao)) && !(digitalRead(vaga1)) && !(digitalRead(vaga2))) // Quando o carro se aproximar do portão e se nao tiver nenhuma vaga disponivel
   {
   digitalWrite(vaga1_led, LOW); // LED VAGA 1 APAGADO
   digitalWrite(vaga2_led, LOW); // LED VAGA 2 APAGADO
@@ -80,7 +90,7 @@ void loop() {
   }
 }
 
-void CorRGB(int vermelho, int verde, int azul) // funcao para o led RGB
+void CorRGB(int vermelho, int verde, int azul)
 {
   vermelho = 255 - vermelho;
   verde = 255 - verde;
